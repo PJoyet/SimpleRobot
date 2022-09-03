@@ -1,0 +1,15 @@
+canvas {
+    padding-left: 0;
+    padding-right: 0;
+    margin: auto;
+    display: block;
+    background: rgb(246, 246, 246);
+}
+
+#game {
+    width: 300px;
+    height: 300px;
+    border: 3px solid;
+    padding: 3px;
+    color: #59b24c;
+}

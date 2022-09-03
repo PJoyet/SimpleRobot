@@ -221,47 +221,58 @@ Fonctions:
         self.DH["theta"]=self.DH["theta"]+dtheta
                 
 if __name__=="__main__":
-     rob = RobotNR(position=[0,0,0])
-     print(rob)
-     print()
-     print("print(rob.getPosO())")
-     print(rob.getPosO())
-     print()
-     print("print(rob.getAllPosA())")
-     print(rob.getAllPosA())
-     print()
-     print("print(rob.Calc_TH(0,len(rob.DH[\"theta\"])))   # Calc_TH(0,3)")
-     print(rob.Calc_TH(0,len(rob.DH["theta"])))
-     rob.MGD([pi/3,pi/3,-pi/3])
-     print()
-     print("print(rob.jacobienne())")
-     print(rob.jacobienne())
-     print()
-     print("print(rob.getPosA())")
-     print(rob.getPosA())
-     print()
-     rob.MGI([-0.9,-0.4,0])
-     rob.MGD([pi/3,pi/3,-pi/3])
-     rob.MGI([-0.9,-0.4,0],[0,0,pi])
-     print("print(rob.getPosA())")
-     print(rob.getPosO())
-     rob.graph_plot_2D("MGI angle contraint par pi","k",fig="3RPlan - 2D")
-     rob.graph_plot_3D("MGI angle contraint par pi","k",fig="3RPlan - 3D")
+    rob = RobotNR(segments=[1,1,1])
+    rob.simule([1,2,0])
+    print(rob.getPosA())
+    rob.simule([1,2,0])
+    print(rob.getPosA())
+    print(rob.DH["theta"])
+    # J = rob.jacobienne()
+    # pinv = np.ndarray.transpose(J) * np.linalg.inv(np.dot(J,np.ndarray.transpose(J)))
+    # print(rob.jacobienne())
+    # print(np.linalg.pinv(rob.jacobienne()))
+    # print(np.linalg.inv(np.dot(J,np.ndarray.transpose(J)))*np.ndarray.transpose(J))
+    #  rob = RobotNR(position=[0,0,0])
+    #  print(rob)
+    #  print()
+    #  print("print(rob.getPosO())")
+    #  print(rob.getPosO())
+    #  print()
+    #  print("print(rob.getAllPosA())")
+    #  print(rob.getAllPosA())
+    #  print()
+    #  print("print(rob.Calc_TH(0,len(rob.DH[\"theta\"])))   # Calc_TH(0,3)")
+    #  print(rob.Calc_TH(0,len(rob.DH["theta"])))
+    #  rob.MGD([pi/3,pi/3,-pi/3])
+    #  print()
+    #  print("print(rob.jacobienne())")
+    #  print(rob.jacobienne())
+    #  print()
+    #  print("print(rob.getPosA())")
+    #  print(rob.getPosA())
+    #  print()
+    #  rob.MGI([-0.9,-0.4,0])
+    #  rob.MGD([pi/3,pi/3,-pi/3])
+    #  rob.MGI([-0.9,-0.4,0],[0,0,pi])
+    #  print("print(rob.getPosA())")
+    #  print(rob.getPosO())
+    #  rob.graph_plot_2D("MGI angle contraint par pi","k",fig="3RPlan - 2D")
+    #  rob.graph_plot_3D("MGI angle contraint par pi","k",fig="3RPlan - 3D")
 
-     print()
-     print("---")
-     print()
+    #  print()
+    #  print("---")
+    #  print()
 
-      #test robot3D
-     theta = [0,0,0]
-     d = [0,0,0]
-     a = [0.50,0.50,0.50]
-     alpha = [pi/2,0,0]
-     couleur = [24,138,125]
-     rob3D = RobotNR(position=[0,0,0], liaisons=theta, segments=a,DH_d=d,DH_alpha=alpha,nom="robot3D",couleur=couleur)
-     rob3D.MGD([pi/3,pi/3,-pi/3])
-     print(rob3D)
-     rob3D.MGI([0.6,1,-0.2])
-     rob3D.graph_plot_3D(fig="3R3D")
+    #   #test robot3D
+    #  theta = [0,0,0]
+    #  d = [0,0,0]
+    #  a = [0.50,0.50,0.50]
+    #  alpha = [pi/2,0,0]
+    #  couleur = [24,138,125]
+    #  rob3D = RobotNR(position=[0,0,0], liaisons=theta, segments=a,DH_d=d,DH_alpha=alpha,nom="robot3D",couleur=couleur)
+    #  rob3D.MGD([pi/3,pi/3,-pi/3])
+    #  print(rob3D)
+    #  rob3D.MGI([0.6,1,-0.2])
+    #  rob3D.graph_plot_3D(fig="3R3D")
             
     
