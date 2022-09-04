@@ -57,7 +57,7 @@ class Robot {
   }
 
   Jacobienne(){
-    let J = math.zeros(3, this.liaison.length) ;
+    let J = math.zeros(6, this.liaison.length) ;
     let vec = [0,0,1];
     let endEffect = this.getPosA();
     let LiaisCoord, V, omega, Jvec; 
@@ -80,17 +80,12 @@ class Robot {
     E = math.multiply(E,gain);
     let J = math.subset(this.Jacobienne(),math.index(math.range(0,3),math.range(0,this.liaison.length)));
     let piJ = math.pinv(J);
-    // console.log(J);
     let dtheta = math.multiply(piJ,math.transpose(E));
     dtheta = math.multiply(math.transpose(dtheta),dt)
-    // console.log(dtheta.subset(math.index(0,2)));
-    // console.log(this.DH["theta"][0]);
-    // console.log(dtheta);
-    // console.log(math.add([this.DH["theta"]],dtheta.subset(math.index(0,math.range(0,3)))));
+
     this.DH["theta"]=[this.DH["theta"][0]+dtheta.subset(math.index(0,0)),
                       this.DH["theta"][1]+dtheta.subset(math.index(0,1)),
                       this.DH["theta"][2]+dtheta.subset(math.index(0,2))];
-    // math.add([this.DH["theta"]],dtheta.subset(math.index(0,math.range(0,3))));
   }
 
 }
