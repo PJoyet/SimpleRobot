@@ -11,7 +11,10 @@ var dt = 0.1
 var mouseX = R.getPosA().subset(math.index(0, 0));
 var mouseY = R.getPosA().subset(math.index(0, 0));
 
+var touch = false;
+
 document.addEventListener("mousemove", mouseMoveHandler, false);
+document.addEventListener('touchstart', handleStart, false);
 
 function mouseMoveHandler(e) {
     var relativeX = e.clientX - canvas.offsetLeft;
@@ -22,7 +25,37 @@ function mouseMoveHandler(e) {
     }
 }
 
+function handleStart(e) {
+    var relativeX = e.touches[0].clientX - canvas.offsetLeft;
+    var relativeY = e.touches[0].clientY- canvas.offsetTop;
+    if (relativeX > 0 && relativeX < canvas.width && relativeY > 0 && relativeY < canvas.height) {
+        mouseX = relativeX;
+        mouseY = relativeY;
+    }
+    touch=true
+}
+
+
+function drawX(x=mouseX, y=mouseY,size = 10) {
+    ctx.save();
+    ctx.beginPath();
+
+    ctx.moveTo(x - size, y - size);
+    ctx.lineTo(x + size, y + size);
+
+    ctx.moveTo(x + size, y - size);
+    ctx.lineTo(x - size, y + size);
+    ctx.strokeStyle = 'green';
+    ctx.lineWidth = 6;
+    ctx.stroke();
+    ctx.restore();
+}
+
 function drawLine(robot, Coords, CoordEnd) {
+if (touch==true) {
+drawX();
+}
+
     
     ctx.beginPath();
     ctx.lineWidth = 4;
