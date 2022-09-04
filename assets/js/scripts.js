@@ -23,16 +23,37 @@ function mouseMoveHandler(e) {
 }
 
 function drawLine(robot, Coords, CoordEnd) {
-    ctx.lineWidth = 4;
+    
     ctx.beginPath();
+    ctx.lineWidth = 4;
     ctx.moveTo(Coords.subset(math.index(0, 0)), Coords.subset(math.index(1, 0)));
     for (let index = 1; index < robot.liaison.length; index++) {
         ctx.lineTo(Coords.subset(math.index(0, index)), Coords.subset(math.index(1, index)));
     }
     ctx.lineTo(CoordEnd[0], CoordEnd[1]);
     ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(origin_x, origin_y, 10, 0, Math.PI * 2, false);
+    ctx.fillStyle = "black";
+    ctx.fill();
+    ctx.closePath();
+
+    for (let index = 1; index < robot.liaison.length; index++) {
+        ctx.beginPath();
+        ctx.arc(Coords.subset(math.index(0, index)), Coords.subset(math.index(1, index)), 5, 0, Math.PI * 2, false);
+        ctx.fillStyle = "black";
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    var dim = 12;
+    var point = [[0, dim], [dim, dim],
+    [dim, dim - dim / 3], [dim / 2, dim - dim / 3],
+    [dim / 2, dim / 3], [dim, dim / 3],
+    [dim, 0], [0, 0]];
+
 }
-console.log(R.getPosA().subset(math.index(0, 0)));
 
 function drawRobot(robot, scale = 1) {
     var Coords = robot.getAllPosA();
