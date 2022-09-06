@@ -4,10 +4,11 @@
 */
 
 class Robot {
-  constructor(position, liaison, segments, DH_d = false, DH_alpha = false) {
+  constructor(position, liaison, segments,type, DH_d = false, DH_alpha = false) {
     this.position = position;
     this.liaison = liaison;
     this.segments = segments;
+    this.type = type;
 
     if (DH_d == false) {
       this.DH_d = [0];
@@ -21,7 +22,7 @@ class Robot {
         this.DH_alpha.push(0);
       }
     }
-    this.DH = { "theta": this.liaison, "d": this.DH_d, "a": this.segments, "alpha": this.DH_alpha };
+    this.DH = { "theta": this.liaison, "d": this.DH_d, "a": this.segments, "alpha": this.DH_alpha, "type": this.type };
 
   }
 
@@ -42,6 +43,28 @@ class Robot {
     }
   return TH;
 }
+
+Calc_J(TH,type){
+  let J = math.zeros(6, 1) ;
+  let endEffect = this.getPosA();
+  let LiaisCoord, V, omega; 
+  let LiaisRot = math.identity(3);
+  let vec = math.zeros(3,1);
+
+  LiaisCoord = math.subset(TH, math.index(math.range(0,3), 3));
+  LiaisRot = math.subset(TH, math.index(math.range(0,3), math.range(0,3)));
+  V = math.subset(LiaisRot, math.index(math.range(0,3), 2));
+  omega = math.cross(V,math.subtract(endEffect, LiaisCoord));
+
+  if (type == "prismatic") {
+      J = math.concat(V,vec,0);
+  }
+  else if (type == "revolute") {
+      J = math.concat(math.transpose(omega),V,0);
+  }
+  return J
+}
+
   getPosA(){
     let cal = this.Calc_TH(0,this.liaison.length);
     return math.subset(cal, math.index(math.range(0,3), 3));
@@ -58,17 +81,10 @@ class Robot {
 
   Jacobienne(){
     let J = math.zeros(6, this.liaison.length) ;
-    let vec = [0,0,1];
-    let endEffect = this.getPosA();
-    let LiaisCoord, V, omega, Jvec; 
-    let LiaisRot = math.identity(3);
+    let Jvec;
 
     for (let index = 0; index < this.liaison.length; index++) {
-      LiaisCoord = math.subset(this.Calc_TH(0,index), math.index(math.range(0,3), 3));
-      LiaisRot = math.subset(this.Calc_TH(0,index), math.index(math.range(0,3), math.range(0,3)));
-      V = math.subset(LiaisRot, math.index(math.range(0,3), 2));
-      omega = math.cross(V,math.subtract(endEffect, LiaisCoord));
-      Jvec = math.concat(math.transpose(omega),V,0);
+      Jvec = this.Calc_J(this.Calc_TH(0,index),this.DH["type"][index])
       J = math.subset(J,math.index(math.range(0,6),index),Jvec);
     }
     return J
