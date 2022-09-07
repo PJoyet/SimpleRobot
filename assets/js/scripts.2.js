@@ -1,19 +1,22 @@
-let W = new Robot2([0, 0, 0], [Math.PI / 2, 0, 0], [1, 1, 1],["revolute","revolute","revolute"])
-var canvas = document.getElementById("game2");
+console.log("start");
+let R = new Robot([0,0,0], [0,0,Math.PI / 2,0, 0, 0],
+                           [0,0,1,1, 1, 1],
+                           ["prismatic","prismatic","revolute","revolute","revolute","revolute"])
 
-// console.log(R.Jacobienne());
+console.log(R.Jacobienne());
+console.log(math.pinv(R.Jacobienne()));
 
 
-var ctx2 = canvas.getContext("2d");
+var canvas = document.getElementById("game");
+var ctx = canvas.getContext("2d");
 canvas.width = canvas.getBoundingClientRect().width;
 canvas.height = canvas.getBoundingClientRect().height;
 
 var origin_x = canvas.width / 2;
 var origin_y = canvas.height;
-console.log(canvas.width);
 var dt = 0.1
-var mouseX = W.getPosA().subset(math.index(0, 0));
-var mouseY = W.getPosA().subset(math.index(0, 0));
+var mouseX = R.getPosA().subset(math.index(0, 0));
+var mouseY = R.getPosA().subset(math.index(0, 0));
 
 var touch = false;
 
@@ -27,7 +30,6 @@ function mouseMoveHandler(e) {
         mouseX = relativeX;
         mouseY = relativeY;
     }
-
 }
 
 function handleStart(e) {
@@ -42,18 +44,18 @@ function handleStart(e) {
 
 
 function drawX(x=mouseX, y=mouseY,size = 10) {
-    ctx2.save();
-    ctx2.beginPath();
+    ctx.save();
+    ctx.beginPath();
 
-    ctx2.moveTo(x - size, y - size);
-    ctx2.lineTo(x + size, y + size);
+    ctx.moveTo(x - size, y - size);
+    ctx.lineTo(x + size, y + size);
 
-    ctx2.moveTo(x + size, y - size);
-    ctx2.lineTo(x - size, y + size);
-    ctx2.strokeStyle = 'green';
-    ctx2.lineWidth = 6;
-    ctx2.stroke();
-    ctx2.restore();
+    ctx.moveTo(x + size, y - size);
+    ctx.lineTo(x - size, y + size);
+    ctx.strokeStyle = 'green';
+    ctx.lineWidth = 6;
+    ctx.stroke();
+    ctx.restore();
 }
 
 function drawLine(robot, Coords, CoordEnd) {
@@ -62,27 +64,27 @@ drawX();
 }
 
     
-    ctx2.beginPath();
-    ctx2.lineWidth = 4;
+    ctx.beginPath();
+    ctx.lineWidth = 4;
     ctx.moveTo(Coords.subset(math.index(0, 0)), Coords.subset(math.index(1, 0)));
     for (let index = 1; index < robot.liaison.length; index++) {
-        ctx2.lineTo(Coords.subset(math.index(0, index)), Coords.subset(math.index(1, index)));
+        ctx.lineTo(Coords.subset(math.index(0, index)), Coords.subset(math.index(1, index)));
     }
-    ctx2.lineTo(CoordEnd[0], CoordEnd[1]);
-    ctx2.stroke();
+    ctx.lineTo(CoordEnd[0], CoordEnd[1]);
+    ctx.stroke();
 
-    ctx2.beginPath();
-    ctx2.arc(origin_x, origin_y, 10, 0, Math.PI * 2, false);
-    ctx2.fillStyle = "black";
-    ctx2.fill();
-    ctx2.closePath();
+    ctx.beginPath();
+    ctx.arc(origin_x, origin_y, 10, 0, Math.PI * 2, false);
+    ctx.fillStyle = "black";
+    ctx.fill();
+    ctx.closePath();
 
     for (let index = 1; index < robot.liaison.length; index++) {
-        ctx2.beginPath();
-        ctx2.arc(Coords.subset(math.index(0, index)), Coords.subset(math.index(1, index)), 5, 0, Math.PI * 2, false);
-        ctx2.fillStyle = "black";
-        ctx2.fill();
-        ctx2.closePath();
+        ctx.beginPath();
+        ctx.arc(Coords.subset(math.index(0, index)), Coords.subset(math.index(1, index)), 5, 0, Math.PI * 2, false);
+        ctx.fillStyle = "black";
+        ctx.fill();
+        ctx.closePath();
     }
 
     var dim = 12;
@@ -111,7 +113,7 @@ function drawRobot(robot, scale = 1) {
 }
 
 function draw() {
-    ctx2.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     var X = (mouseX - origin_x) / 100;
     var Y = (origin_y - mouseY) / 100;
 
@@ -122,10 +124,9 @@ function draw() {
         Y = radius * Math.sin(angle);
     }
 
-    W.simule([X, Y, 0], gain = 2, dt = 0.1);
+    R.simule([X, Y, 0], gain = 2, dt = 0.1);
     drawRobot(R, 100);
 }
-setInterval(draw, 100);
-
+// setInterval(draw, 100);
 
 

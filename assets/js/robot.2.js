@@ -3,7 +3,7 @@
     Created By PJoyet
 */
 
-class Robot2 {
+class Robot {
     constructor(position, liaison, segments,type, DH_d = false, DH_alpha = false) {
       this.position = position;
       this.liaison = liaison;
@@ -43,19 +43,19 @@ class Robot2 {
       }
     return TH;
   }
-
+  
   Calc_J(TH,type){
     let J = math.zeros(6, 1) ;
     let endEffect = this.getPosA();
     let LiaisCoord, V, omega; 
     let LiaisRot = math.identity(3);
     let vec = math.zeros(3,1);
-
+  
     LiaisCoord = math.subset(TH, math.index(math.range(0,3), 3));
     LiaisRot = math.subset(TH, math.index(math.range(0,3), math.range(0,3)));
     V = math.subset(LiaisRot, math.index(math.range(0,3), 2));
     omega = math.cross(V,math.subtract(endEffect, LiaisCoord));
-
+  
     if (type == "prismatic") {
         J = math.concat(V,vec,0);
     }
@@ -64,7 +64,7 @@ class Robot2 {
     }
     return J
   }
-
+  
     getPosA(){
       let cal = this.Calc_TH(0,this.liaison.length);
       return math.subset(cal, math.index(math.range(0,3), 3));
@@ -81,18 +81,9 @@ class Robot2 {
   
     Jacobienne(){
       let J = math.zeros(6, this.liaison.length) ;
-    //   let vec = [0,0,1];
-    //   let endEffect = this.getPosA();
-    //   let LiaisCoord, V, omega, Jvec; 
-    //   let LiaisRot = math.identity(3);
       let Jvec;
   
       for (let index = 0; index < this.liaison.length; index++) {
-        // LiaisCoord = math.subset(this.Calc_TH(0,index), math.index(math.range(0,3), 3));
-        // LiaisRot = math.subset(this.Calc_TH(0,index), math.index(math.range(0,3), math.range(0,3)));
-        // V = math.subset(LiaisRot, math.index(math.range(0,3), 2));
-        // omega = math.cross(V,math.subtract(endEffect, LiaisCoord));
-        // Jvec = math.concat(math.transpose(omega),V,0);
         Jvec = this.Calc_J(this.Calc_TH(0,index),this.DH["type"][index])
         J = math.subset(J,math.index(math.range(0,6),index),Jvec);
       }
@@ -104,6 +95,8 @@ class Robot2 {
       let E = math.subtract(pos,math.transpose(this.getPosA()));
       E = math.multiply(E,gain);
       let J = math.subset(this.Jacobienne(),math.index(math.range(0,3),math.range(0,this.liaison.length)));
+    //   console.log(J);
+
       let piJ = math.pinv(J);
       let dtheta = math.multiply(piJ,math.transpose(E));
       dtheta = math.multiply(math.transpose(dtheta),dt)
